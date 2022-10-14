@@ -99,7 +99,7 @@ def traveloka():
 
         review_list = []
         reviews = reviewsoup.find_all('div',class_='css-1dbjc4n r-1guathk r-1yzf0co')
-        numberofreviews = 30
+        numberofreviews = 100
         while len(review_list) < numberofreviews:
             for x in range(len(reviews)):
                 try:
