@@ -127,5 +127,5 @@ def traveloka():
     #print(hotelslist)
     return hotelslist
 
-traveloka()
+print(traveloka())
 
