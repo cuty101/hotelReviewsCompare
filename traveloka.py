@@ -4,22 +4,28 @@ import nums_from_string
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
+import pandas as pd
 
 def countstars(starrow):
-    fullstars = starrow.find_all('img', src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/a/a7419e60fd1d8393884146a8f2732552.svg')
-    halfstars = starrow.find_all('img', src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/7/712367ee4e183cc414efbd8d338b4f49.svg')
+    fullstars = starrow.find_all('img',src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/a/a7419e60fd1d8393884146a8f2732552.svg')
+    halfstars = starrow.find_all('img',src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/7/712367ee4e183cc414efbd8d338b4f49.svg')
     return len(fullstars)*2 + len(halfstars)
 
 def traveloka():
     URL = "https://m.traveloka.com/en-sg/hotel/singapore/region/singapore-107493" #first page of hotel list
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
+
+    options = webdriver.ChromeOptions()
     driver = webdriver.Chrome("C:\\Users\\xinying\\Downloads\\chromedriver.exe")
 
     hotels = soup.find_all("div", class_="tvat-hotelList") #its an array
     print("There are" , len(hotels) , " hotels in this page.")
 
     hotelslist = []
+
+
+
     for num in range(len(hotels)):
         hotel_objects = {} 
         
@@ -105,7 +111,7 @@ def traveloka():
                     review_list.append({"Description":reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date of stay":dateofstay})
                 except:
                     continue
-            #click to go next page (for reviews)
+            #put code click to go next page (REVIEWS)
             time.sleep(1)
             button = ""
             try:
@@ -119,13 +125,15 @@ def traveloka():
             
         print(len(review_list[:numberofreviews]))
 
-        # print(hotel_objects)
-        # print(review_list)
-        # print('\n')
         hotelslist.append(hotel_objects) 
+        
+    #convert to dataframe
+    df1 = pd.DataFrame(data = review_list)
+    df2 = pd.DataFrame(data = hotelslist)
+    #convert to excel
+    df1.to_excel("reviews.xlsx", index=False)
+    df2.to_excel("hotels.xlsx", index=False)
 
-    #print(hotelslist)
-    return hotelslist
+    return
 
 print(traveloka())
-
