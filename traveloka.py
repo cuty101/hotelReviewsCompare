@@ -23,7 +23,6 @@ def traveloka():
     print("There are" , len(hotels) , " hotels in this page.")
 
     hotelslist = []
-
     for num in range(len(hotels)):
         hotel_objects = {} 
         
@@ -86,7 +85,6 @@ def traveloka():
                 continue
 
         time.sleep(1)
-
         reviewshtml = driver.page_source
         reviewsoup = BeautifulSoup(reviewshtml,'html.parser')
         starsdiv = reviewsoup.find_all('div',class_ = "css-1dbjc4n r-vxcjpn r-bgc8nv")[1]
@@ -122,7 +120,6 @@ def traveloka():
                 break
             
         print(len(review_list[:numberofreviews]))
-
         hotelslist.append(hotel_objects) 
         
     #convert to dataframe
