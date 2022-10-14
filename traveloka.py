@@ -24,8 +24,6 @@ def traveloka():
 
     hotelslist = []
 
-
-
     for num in range(len(hotels)):
         hotel_objects = {} 
         
