@@ -23,8 +23,6 @@ def traveloka():
 
     hotelslist = []
 
-
-
     for num in range(len(hotels)):
         hotel_objects = {} 
         
@@ -93,7 +91,6 @@ def traveloka():
                 review_list.append({"Description":reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date of stay":dateofstay})
             except:
                 continue
-
 
         #
 
