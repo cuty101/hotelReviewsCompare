@@ -6,23 +6,20 @@ import time
 from selenium.webdriver.common.by import By
 
 def countstars(starrow):
-    fullstars = starrow.find_all('img',src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/a/a7419e60fd1d8393884146a8f2732552.svg')
-    halfstars = starrow.find_all('img',src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/7/712367ee4e183cc414efbd8d338b4f49.svg')
+    fullstars = starrow.find_all('img', src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/a/a7419e60fd1d8393884146a8f2732552.svg')
+    halfstars = starrow.find_all('img', src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/7/712367ee4e183cc414efbd8d338b4f49.svg')
     return len(fullstars)*2 + len(halfstars)
 
 def traveloka():
     URL = "https://m.traveloka.com/en-sg/hotel/singapore/region/singapore-107493" #first page of hotel list
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
-
-    options = webdriver.ChromeOptions()
     driver = webdriver.Chrome("C:\\Users\\xinying\\Downloads\\chromedriver.exe")
 
     hotels = soup.find_all("div", class_="tvat-hotelList") #its an array
     print("There are" , len(hotels) , " hotels in this page.")
 
     hotelslist = []
-
     for num in range(len(hotels)):
         hotel_objects = {} 
         
@@ -63,42 +60,72 @@ def traveloka():
         #automate to individual hotel pages
         driver.get(hotellinks)
         time.sleep(2)     #add delay in the execution of a program
-        try:
-            showmorebutton = driver.find_element(By.XPATH, "//div[text()='See All Reviews']")
-            showmorebutton.click()
-            print("Clicked button 1")
-        except:
-            driver.execute_script("window.scrollTo(0, window.scrollY + 200)")
-            time.sleep(1)
-            showmorebutton = driver.find_element(By.XPATH, "//div[text()='Reviews']")
-            showmorebutton.click()
-            print("Button 1 failed, fallback to button 2")
+        reviewsuccess = False
+        while not reviewsuccess:
+            try:
+                try:
+                    showmorebutton = driver.find_element(By.XPATH, "//div[text()='See All Reviews']")
+                    showmorebutton.click()
+                    reviewsuccess = True
+                    print("Clicked button 1")
+                except:
+                    print("Trying button 2")
+                    driver.execute_script("window.scrollTo(0, window.scrollY + 200)")
+                    time.sleep(2)
+                    showmorebutton = driver.find_element(By.XPATH, "//div[text()='Reviews']")
+                    showmorebutton.click()
+                    reviewsuccess = True
+                    print("Button 1 failed, fallback to button 2 succeeded")
+            except:
+                driver.refresh()
+                print("Both failed, refreshing page")
+                continue
+
         time.sleep(1)
+
         reviewshtml = driver.page_source
         reviewsoup = BeautifulSoup(reviewshtml,'html.parser')
         starsdiv = reviewsoup.find_all('div',class_ = "css-1dbjc4n r-vxcjpn r-bgc8nv")[1]
         starrow = starsdiv.find_all('div',class_ = 'css-1dbjc4n r-1awozwy r-18u37iz r-1h0z5md')
         cleanliness = countstars(starrow[0])
         service = countstars(starrow[4])
-        print(f"Cleanliness: {str(cleanliness)}")
-        print(f"Service: {str(service)}")
+
+        hotel_objects['Cleanliness'] = str(cleanliness)
+        hotel_objects['Service'] = str(service)
+        #print(f"Cleanliness: {str(cleanliness)}")
+        #print(f"Service: {str(service)}")
+
         review_list = []
         reviews = reviewsoup.find_all('div',class_='css-1dbjc4n r-1guathk r-1yzf0co')
-        
-        for x in range(len(reviews)):
+        numberofreviews = 30
+        while len(review_list) < numberofreviews:
+            for x in range(len(reviews)):
+                try:
+                    dateofstay = reviews[x].find_all('div',class_ = "css-901oao r-1ud240a r-1sixt3s r-1b43r93 r-b88u0q r-135wba7 r-fdjqy7 r-tsynxw")[0].contents[0]
+                    review_list.append({"Description":reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date of stay":dateofstay})
+                except:
+                    continue
+            #click to go next page (for reviews)
+            time.sleep(1)
+            button = ""
             try:
-                dateofstay = reviews[x].find_all('div',class_ = "css-901oao r-1ud240a r-1sixt3s r-1b43r93 r-b88u0q r-135wba7 r-fdjqy7 r-tsynxw")[0].contents[0]
-                review_list.append({"Description":reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date of stay":dateofstay})
+                time.sleep(0.2)
+                button = driver.find_element(By.XPATH, "//div[contains(@class, 'css-18t94o4 css-1dbjc4n r-1ihkh82 r-kdyh1x r-1loqt21 r-61z16t r-ero68b r-vkv6oe r-10paoce r-1e081e0 r-5njf8e r-1otgn73 r-lrvibr')]")
+                button.click()
+                #print("Button found and clicked")
             except:
-                continue
+                #print("Find button failed... stopping.")
+                break
+            
+        print(len(review_list[:numberofreviews]))
 
-        #
-
-        print(review_list)
+        # print(hotel_objects)
+        # print(review_list)
+        # print('\n')
         hotelslist.append(hotel_objects) 
-        print(hotel_objects)
 
     #print(hotelslist)
     return hotelslist
 
 traveloka()
+
