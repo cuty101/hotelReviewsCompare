@@ -106,7 +106,7 @@ def traveloka():
             for x in range(len(reviews)):
                 try:
                     dateofstay = reviews[x].find_all('div',class_ = "css-901oao r-1ud240a r-1sixt3s r-1b43r93 r-b88u0q r-135wba7 r-fdjqy7 r-tsynxw")[0].contents[0]
-                    review_list.append({"Description":reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date of stay":dateofstay})
+                    review_list.append({"Name" : hotelname , "Description" : reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date Of Stay" : dateofstay})
                 except:
                     continue
             #put code click to go next page (REVIEWS)
