@@ -5,6 +5,8 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 import pandas as pd
+from openpyxl.workbook import Workbook
+import csv
 
 def countstars(starrow):
     fullstars = starrow.find_all('img',src = 'https://d1785e74lyxkqq.cloudfront.net/_next/static/v2/a/a7419e60fd1d8393884146a8f2732552.svg')
@@ -12,6 +14,11 @@ def countstars(starrow):
     return len(fullstars)*2 + len(halfstars)
 
 def traveloka():
+    with open("reviews.csv","a+",encoding='utf-8') as file_writer:
+        fields=["Name","Description","Date Of Stay"]
+        writer=csv.DictWriter(file_writer,fieldnames=fields)
+        writer.writeheader()
+
     URL = "https://m.traveloka.com/en-sg/hotel/singapore/region/singapore-107493" #first page of hotel list
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
@@ -23,6 +30,7 @@ def traveloka():
     print("There are" , len(hotels) , " hotels in this page.")
 
     hotelslist = []
+
     for num in range(len(hotels)):
         hotel_objects = {} 
         
@@ -85,6 +93,7 @@ def traveloka():
                 continue
 
         time.sleep(1)
+
         reviewshtml = driver.page_source
         reviewsoup = BeautifulSoup(reviewshtml,'html.parser')
         starsdiv = reviewsoup.find_all('div',class_ = "css-1dbjc4n r-vxcjpn r-bgc8nv")[1]
@@ -107,7 +116,7 @@ def traveloka():
                     review_list.append({"Name" : hotelname , "Description" : reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date Of Stay" : dateofstay})
                 except:
                     continue
-            #put code click to go next page (REVIEWS)
+            #put code click to go next page (reviews)
             time.sleep(1)
             button = ""
             try:
@@ -118,16 +127,20 @@ def traveloka():
             except:
                 #print("Find button failed... stopping.")
                 break
-            
-        print(len(review_list[:numberofreviews]))
+
         hotelslist.append(hotel_objects) 
+
+        with open("reviews.csv","a+",encoding='utf-8') as file_writer:
+            fields=["Name","Description","Date Of Stay"]
+            writer=csv.DictWriter(file_writer,fieldnames=fields)
+            for x in review_list:
+                writer.writerow(x)   
+    
         
     #convert to dataframe
-    df1 = pd.DataFrame(data = review_list)
-    df2 = pd.DataFrame(data = hotelslist)
+    df = pd.DataFrame(data = hotelslist)
     #convert to excel
-    df1.to_excel("reviews.xlsx", index=False)
-    df2.to_excel("hotels.xlsx", index=False)
+    df.to_excel("hotels.xlsx", index=False)
 
     return
 
