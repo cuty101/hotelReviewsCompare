@@ -317,6 +317,32 @@ def graph_for_service_rating(ratings_df):
     plt.ylabel("Rating Score")
     plt.title("Service Ratings")
     plt.show()     
+    
+def top_nwords_graph(top10):
+    data = dict(top10)
+    courses = (data.keys())
+    values =  (data.values())
+
+    fig = plt.figure(figsize = (10, 5))
+
+    # creating the bar plot
+    plt.bar(courses, values, color ='blue',
+            width = 0.4)
+
+    plt.xlabel("Top 10 words")
+    plt.ylabel("Number of times mentioned")
+    plt.title("Bad reviews")
+    plt.show()
+    
+def plot_frequency(freq):
+    plt.figure(figsize=(10,5))
+    freq.plot(50,cumulative=False)
+    plt.show()
+
+def plot_cloud(wordcloud):
+    plt.figure(figsize=(40,30))
+    plt.imshow(wordcloud)
+    plt.axis("off")
 
 
 # In[ ]:
