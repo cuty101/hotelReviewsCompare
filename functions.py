@@ -1,8 +1,23 @@
-#!/usr/bin/env python
-# coding: utf-8
+import string
 
-# In[1]:
+import nltk
+import pandas as pd
+from gensim.parsing.porter import PorterStemmer
+from nltk.corpus import stopwords
+from nltk.tokenize import sent_tokenize, word_tokenize
 
+import collections
+import functools
+import operator
+
+import matplotlib.pyplot as plt
+import numpy as np
+from nltk.probability import FreqDist
+from nrclex import NRCLex
+from wordcloud import WordCloud
+import collections, functools, operator
+
+porter_stemmer = PorterStemmer()
 
 def neg_reviews(overall_df):
     low_rating=[]
@@ -14,7 +29,7 @@ def neg_reviews(overall_df):
     negative_reviews_df = pd.DataFrame(columns=['Hotel Name', 'Title', 'Content','Rating','Date of stay'])
     low_rating = set(low_rating)
     for i in low_rating:
-        negative_reviews_df= pd.concat([negative_reviews_df,df.loc[df['Rating']==i]])
+        negative_reviews_df= pd.concat([negative_reviews_df,overall_df.loc[overall_df['Rating']==i]])
     negative_reviews_df.reset_index().drop(['index'], axis=1)
     
     return negative_reviews_df
@@ -29,7 +44,7 @@ def pos_reviews(overall_df):
     positive_reviews_df = pd.DataFrame(columns=['Hotel Name', 'Title', 'Content','Rating','Date of stay'])
     high_rating = set(high_rating)
     for i in high_rating:
-        positive_reviews_df= pd.concat([positive_reviews_df,df.loc[df['Rating']==i]])
+        positive_reviews_df= pd.concat([positive_reviews_df,overall_df.loc[overall_df['Rating']==i]])
     positive_reviews_df
     
     return positive_reviews_df
@@ -162,7 +177,7 @@ def concat_dataframes_get_unique_hotels(first_top_df, second_top_df,third_top_df
 
 
     
-def unique_hotels_df(UniqueNames):
+def unique_hotels_df(UniqueNames, UniqueHotel):
     list_of_df=[]
     for i in UniqueNames:
         df=UniqueHotel[i]
@@ -317,7 +332,18 @@ def graph_for_service_rating(ratings_df):
     plt.ylabel("Rating Score")
     plt.title("Service Ratings")
     plt.show()     
-    
+
+def plot_frequency(freq):
+    plt.figure(figsize=(10,5))
+    freq.plot(50,cumulative=False)
+    plt.show()
+
+def plot_cloud(wordcloud):
+    plt.figure(figsize=(40,30))
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.show()
+
 def top_nwords_graph(top10):
     data = dict(top10)
     courses = (data.keys())
@@ -329,24 +355,7 @@ def top_nwords_graph(top10):
     plt.bar(courses, values, color ='blue',
             width = 0.4)
 
-    plt.xlabel("Top 10 words")
+    plt.xlabel("Bad reviews")
     plt.ylabel("Number of times mentioned")
-    plt.title("Bad reviews")
+    plt.title("Total number of times mentioned")
     plt.show()
-    
-def plot_frequency(freq):
-    plt.figure(figsize=(10,5))
-    freq.plot(50,cumulative=False)
-    plt.show()
-
-def plot_cloud(wordcloud):
-    plt.figure(figsize=(40,30))
-    plt.imshow(wordcloud)
-    plt.axis("off")
-
-
-# In[ ]:
-
-
-
-
