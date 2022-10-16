@@ -1,0 +1,13 @@
+beautifulsoup4==4.11.1
+Flask==2.1.2
+gensim==4.2.0
+matplotlib==3.2.1
+nltk==3.7
+nrclex==4.0
+numpy==1.19.5
+nums_from_string==0.1.2
+openpyxl==3.0.10
+pandas==1.0.3
+requests==2.24.0
+selenium==3.141.0
+wordcloud==1.8.2.2
