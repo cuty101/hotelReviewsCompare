@@ -65,7 +65,7 @@ def top_words_graph(top10):
 
     plt.xlabel("Good reviews")
     plt.ylabel("Number of times mentioned")
-    plt.title("Total number of times mentioned")
+    plt.title("Top words for reviews")
     plt.show()
     
 def filtered_reviews_based_on_top10(top10, pos_df):
