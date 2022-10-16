@@ -1,21 +1,18 @@
-import string
-
-import nltk
-import pandas as pd
-from gensim.parsing.porter import PorterStemmer
-from nltk.corpus import stopwords
-from nltk.tokenize import sent_tokenize, word_tokenize
-
 import collections
 import functools
 import operator
+import string
 
 import matplotlib.pyplot as plt
+import nltk
 import numpy as np
+import pandas as pd
+from gensim.parsing.porter import PorterStemmer
+from nltk.corpus import stopwords
 from nltk.probability import FreqDist
+from nltk.tokenize import sent_tokenize, word_tokenize
 from nrclex import NRCLex
 from wordcloud import WordCloud
-import collections, functools, operator
 
 porter_stemmer = PorterStemmer()
 
@@ -175,8 +172,6 @@ def concat_dataframes_get_unique_hotels(first_top_df, second_top_df,third_top_df
     
     return concatenated_dataframes
 
-
-    
 def unique_hotels_df(UniqueNames, UniqueHotel):
     list_of_df=[]
     for i in UniqueNames:
@@ -206,7 +201,6 @@ def graph_for_reviewers_emotions(list_of_unique_hotel_df):
     plt.title("Reviewer's emotions")
     plt.show()
 
-        
 def graph_for_total_words(count_of_words, UniqueNames):
     for i in range(len(count_of_words)):
         data = count_of_words[i]
@@ -228,15 +222,14 @@ def graph_for_overall_rating(overall_df, UniqueNames):
     for i in range(len(overall_ratings)):
         hotel_ratings.update({UniqueNames[i]:overall_ratings['Rating'][i]})
     data = hotel_ratings
-    courses = (data.keys())
-    values =  (data.values())
+    values = list(data.keys())
+    courses =  list(data.values())
     c = ['red', 'yellow', 'black', 'blue', 'orange','purple','pink','yellow','magenta', '#eeefff', '#FF5733', '#77D4FF', '#DBAFFF','#AFFBFF','#FFF4AF','#FFDDAF','#FFAFFB', '#9B5B98', '#539195','#775E6D',]
     fig = plt.figure(figsize = (90, 40))
-    plt.bar(courses, values, color =c,
-            width = 0.4)
+    plt.barh(values, courses, color =c)
 
-    plt.xlabel("Hotel Names")
-    plt.ylabel("Rating Score")
+    plt.ylabel("Hotel Names")
+    plt.xlabel("Rating Score")
     plt.title("Overall Ratings")
     plt.show()
     
@@ -249,18 +242,17 @@ def graph_for_cleanliness_rating(ratings_df):
             hotel_ratings.update({unique_hotels[i]:sub_factor_sum['Cleanliness'][i]})
             
     data = hotel_ratings
-    values = list(data.values())
-    hotel =  list(data.keys())
+    values = list(data.keys())
+    courses =  list(data.values())
     c = ['#77D4FF']
     fig = plt.figure(figsize = (90, 40))
-    plt.barh(hotel, values, color =c)
+    plt.barh(values, courses, color =c)
 
-    plt.xlabel("Hotel Names")
-    plt.ylabel("Rating Score")
+    plt.ylabel("Hotel Names")
+    plt.xlabel("Rating Score")
     plt.title("Cleanliness Ratings")
-    plt.show()
-
-
+    plt.show() 
+    
 def graph_for_service_rating(ratings_df):
     ratings_df.rename(columns = {'Hotel Name':'Hotel_Name'}, inplace = True)
     sub_factor_sum = ratings_df.groupby('Hotel_Name').sum()
@@ -268,18 +260,18 @@ def graph_for_service_rating(ratings_df):
     hotel_ratings={}
     for i in range(len(sub_factor_sum)):
             hotel_ratings.update({unique_hotels[i]:sub_factor_sum['Service'][i]})
-
+            
     data = hotel_ratings
-    values = list(data.values())
-    hotel =  list(data.keys())
+    values = list(data.keys())
+    courses =  list(data.values())
     c = ['#DBAFFF']
     fig = plt.figure(figsize = (90, 40))
-    plt.barh(values, hotel, color =c)
+    plt.barh(values, courses, color =c)
 
-    plt.xlabel("Rating Score")
     plt.ylabel("Hotel Names")
+    plt.xlabel("Rating Score")
     plt.title("Service Ratings")
-    plt.show()
+    plt.show()     
 
 def plot_frequency(freq):
     plt.figure(figsize=(10,5))
