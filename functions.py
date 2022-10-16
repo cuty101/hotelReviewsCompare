@@ -185,56 +185,6 @@ def unique_hotels_df(UniqueNames, UniqueHotel):
         list_of_df.append(df_unique)
     return list_of_df
 
-# def get_each_hotel_emotions(list_of_df):
-#     emotion_for_each_hotel=[]
-#     for k in range(len(list_of_df)):
-#         happy_list=[]
-#         angry_list=[]
-#         surprised_list=[]
-#         sad_list=[]
-#         fear_list=[]
-#         for i in list_of_df[k]['Content']:
-#             emotion=get_emotion(i)
-#             happy=[(k,v) for k,v in emotion.items()][0]
-#             happy_list.append(happy)
-#             angry=[(k,v) for k,v in emotion.items()][1]
-#             angry_list.append(angry)
-#             surprised=[(k,v) for k,v in emotion.items()][2]
-#             surprised_list.append(surprised)
-#             sad=[(k,v) for k,v in emotion.items()][3]
-#             sad_list.append(sad)
-#             fear=[(k,v) for k,v in emotion.items()][4]
-#             fear_list.append(fear)
-
-#             happyCount=0
-#             for value in happy_list:
-#                 happyCount=happyCount+value[1]
-#             happyCount=happyCount*10
-
-#             angryCount=0
-#             for value in angry_list:
-#                 angryCount=angryCount+value[1]
-#             angryCount=angryCount*10
-
-#             surprisedCount=0
-#             for value in surprised_list:
-#                 surprisedCount=angryCount+value[1]
-#             surprisedCount=surprisedCount*10
-
-#             sadCount=0
-#             for value in sad_list:
-#                 sadCount=sadCount+value[1]
-#             sadCount=sadCount*10
-
-#             fearCount=0
-#             for value in fear_list:
-#                 fearCount=fearCount+value[1]
-#             fearCount=fearCount*10
-
-#         emotions_count_dict={'Happy': round(happyCount,2), "Angry": round(angryCount,2), "Surprised": round(surprisedCount,2), "Sad": round(sadCount,2), "fear": round(fearCount,2)}
-#         emotion_for_each_hotel.append(emotions_count_dict)
-#     return emotion_for_each_hotel
-
 def graph_for_reviewers_emotions(list_of_unique_hotel_df):
     emotion_for_each_hotel=[]
     for k in range(len(list_of_unique_hotel_df)):
@@ -299,18 +249,17 @@ def graph_for_cleanliness_rating(ratings_df):
             hotel_ratings.update({unique_hotels[i]:sub_factor_sum['Cleanliness'][i]})
             
     data = hotel_ratings
-    courses = (data.keys())
-    values =  (data.values())
+    values = list(data.values())
+    hotel =  list(data.keys())
     c = ['#77D4FF']
     fig = plt.figure(figsize = (90, 40))
-    plt.bar(courses, values, color =c,
-            width = 0.4)
+    plt.barh(hotel, values, color =c)
 
     plt.xlabel("Hotel Names")
     plt.ylabel("Rating Score")
     plt.title("Cleanliness Ratings")
-    plt.show() 
-    
+    plt.show()
+
 
 def graph_for_service_rating(ratings_df):
     ratings_df.rename(columns = {'Hotel Name':'Hotel_Name'}, inplace = True)
@@ -319,19 +268,18 @@ def graph_for_service_rating(ratings_df):
     hotel_ratings={}
     for i in range(len(sub_factor_sum)):
             hotel_ratings.update({unique_hotels[i]:sub_factor_sum['Service'][i]})
-            
+
     data = hotel_ratings
-    courses = (data.keys())
-    values =  (data.values())
+    values = list(data.values())
+    hotel =  list(data.keys())
     c = ['#DBAFFF']
     fig = plt.figure(figsize = (90, 40))
-    plt.bar(courses, values, color =c,
-            width = 0.4)
+    plt.barh(values, hotel, color =c)
 
-    plt.xlabel("Hotel Names")
-    plt.ylabel("Rating Score")
+    plt.xlabel("Rating Score")
+    plt.ylabel("Hotel Names")
     plt.title("Service Ratings")
-    plt.show()     
+    plt.show()
 
 def plot_frequency(freq):
     plt.figure(figsize=(10,5))
