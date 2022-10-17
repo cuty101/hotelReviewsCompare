@@ -134,7 +134,7 @@ def removeLinker(fname):
     return linker
 
 #maincode
-def main():
+if __name__ == "__main__":
     global hotelLink
     bsobj = getSoup("https://www.tripadvisor.com/Hotels-g294265-Singapore-Hotels.html") #get soup
     hotelLink = []
@@ -193,6 +193,3 @@ def main():
         print(f"{fname0}: File saved")
         f1.close()
         print(f"{fname1}: File saved")
-
-if __name__ == "__main__":
-    main() 
