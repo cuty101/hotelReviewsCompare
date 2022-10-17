@@ -20,6 +20,15 @@ def top10words():
     job.start()
     return redirect("/")
 
+@app.route("/top10wordswordcloud")
+def toptenwordswordcloud():
+    p_most_common = pd.Series(dict(p_top10_words))
+    wordcloud = WordCloud(width=3000, height=2000, colormap="Set2", collocations=False, max_words=200)
+    wordcloud.generate_from_frequencies(frequencies=p_most_common)
+    job = multiprocessing.Process(target=plot_cloud, args=(wordcloud,))
+    job.start()
+    return redirect("/")
+
 @app.route("/emotions")
 def emotions():
     job = multiprocessing.Process(target=graph_for_reviewers_emotions, args=(p_list_of_unique_hotel_df,))
@@ -60,6 +69,8 @@ def ntoptenwordswordcloud():
     job = multiprocessing.Process(target=plot_cloud, args=(wordcloud,))
     job.start()
     return redirect("/")
+
+    
 
 @app.route("/nemotions")
 def nemotions():
