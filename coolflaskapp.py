@@ -9,17 +9,19 @@ from functions import *
 app = Flask(__name__)
 
 
-
+#index page
 @app.route("/")
 def hello():
     return render_template("menu.html")
 
+#top 10 words among positive reviews
 @app.route("/top10words")
 def top10words():
     job = multiprocessing.Process(target=top_words_graph, args=(p_top10_words,))
     job.start()
     return redirect("/")
 
+#word cloud for top 10 words among positive reviews
 @app.route("/top10wordswordcloud")
 def toptenwordswordcloud():
     p_most_common = pd.Series(dict(p_top10_words))
@@ -29,24 +31,28 @@ def toptenwordswordcloud():
     job.start()
     return redirect("/")
 
+#emotion graph among positive reviews
 @app.route("/emotions")
 def emotions():
     job = multiprocessing.Process(target=graph_for_reviewers_emotions, args=(p_list_of_unique_hotel_df,))
     job.start()
     return redirect("/")
 
+#overall average ratings given among the positive reviews
 @app.route("/overallrating")
 def overallRating():
     job = multiprocessing.Process(target=graph_for_overall_rating, args=(df, p_UniqueNames,))
     job.start()
     return redirect("/")
 
+#average cleanliness ratings
 @app.route("/cleanliness")
 def cleanliness():
     job = multiprocessing.Process(target=graph_for_cleanliness_rating, args=(rating_df,))
     job.start()
     return redirect("/")
 
+#average service ratings
 @app.route("/service")
 def service():
     job = multiprocessing.Process(target=graph_for_service_rating, args=(rating_df,))
@@ -54,6 +60,7 @@ def service():
     graph_for_service_rating(rating_df)
     return redirect("/")
 
+#top 10 words in negative reviews
 @app.route("/ntop10wordsgraph")
 def ntop10wordsgraph():
     
@@ -61,6 +68,7 @@ def ntop10wordsgraph():
     job.start()
     return redirect("/")
 
+#word cloud for top 10 words in negative reviews
 @app.route("/ntop10wordswordcloud")
 def ntoptenwordswordcloud():
     n_most_common = pd.Series(dict(n_top10))
@@ -70,19 +78,21 @@ def ntoptenwordswordcloud():
     job.start()
     return redirect("/")
 
-    
-
+#emotion displayed in negative reviews
 @app.route("/nemotions")
 def nemotions():
     job = multiprocessing.Process(target=graph_for_reviewers_emotions, args=(n_list_of_unique_hotel_df,))
     job.start()
     return redirect("/")
 
+#average rating in negative reviews
 @app.route("/noverallrating")
 def noverallrating():
     job = multiprocessing.Process(target=graph_for_overall_rating, args=(neg_df, n_UniqueNames))
     job.start()
     return redirect("/")
+
+#main code
 if __name__ == "__main__":
     nltk.download(["stopwords", "punkt", "wordnet"])
     df = pd.read_csv(r"all_reviews.csv")
