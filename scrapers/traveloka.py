@@ -22,18 +22,13 @@ def traveloka():
     URL = "https://m.traveloka.com/en-sg/hotel/singapore/region/singapore-107493" #first page of hotel list
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
-
-    options = webdriver.ChromeOptions()
     driver = webdriver.Chrome("C:\\Users\\xinying\\Downloads\\chromedriver.exe")
-
     hotels = soup.find_all("div", class_="tvat-hotelList") #its an array
     print("There are" , len(hotels) , " hotels in this page.")
 
     hotelslist = []
-
     for num in range(len(hotels)):
         hotel_objects = {} 
-        
         hotelname = hotels[num].find_all("h3", class_="_20SY_ tvat-hotelName")[0].contents[0] #.content gives the name of hotels only
         hotelprice = hotels[num].find_all("span", class_="_2c6V9 tvat-hotelPrice")[0].contents[0].strip(" S$")
         star = hotels[num].find_all("div", class_="_1RoiH UZ77u tvat-starRating _1Fq-V")[0].contents[0]
@@ -70,7 +65,7 @@ def traveloka():
 
         #automate to individual hotel pages
         driver.get(hotellinks)
-        time.sleep(2)     #add delay in the execution of a program
+        time.sleep(2)                   #add delay in the execution of a program
         reviewsuccess = False
         while not reviewsuccess:
             try:
@@ -78,18 +73,14 @@ def traveloka():
                     showmorebutton = driver.find_element(By.XPATH, "//div[text()='See All Reviews']")
                     showmorebutton.click()
                     reviewsuccess = True
-                    print("Clicked button 1")
                 except:
-                    print("Trying button 2")
                     driver.execute_script("window.scrollTo(0, window.scrollY + 200)")
                     time.sleep(2)
                     showmorebutton = driver.find_element(By.XPATH, "//div[text()='Reviews']")
                     showmorebutton.click()
                     reviewsuccess = True
-                    print("Button 1 failed, fallback to button 2 succeeded")
             except:
                 driver.refresh()
-                print("Both failed, refreshing page")
                 continue
 
         time.sleep(1)
@@ -103,8 +94,6 @@ def traveloka():
 
         hotel_objects['Cleanliness'] = str(cleanliness)
         hotel_objects['Service'] = str(service)
-        #print(f"Cleanliness: {str(cleanliness)}")
-        #print(f"Service: {str(service)}")
 
         review_list = []
         reviews = reviewsoup.find_all('div',class_='css-1dbjc4n r-1guathk r-1yzf0co')
@@ -116,16 +105,13 @@ def traveloka():
                     review_list.append({"Name" : hotelname , "Description" : reviews[x].find_all('div',class_ = "css-901oao r-1sixt3s r-ubezar r-majxgm r-135wba7 r-fdjqy7")[0].contents[0],"Date Of Stay" : dateofstay})
                 except:
                     continue
-            #put code click to go next page (reviews)
+
             time.sleep(1)
-            button = ""
             try:
                 time.sleep(0.2)
                 button = driver.find_element(By.XPATH, "//div[contains(@class, 'css-18t94o4 css-1dbjc4n r-1ihkh82 r-kdyh1x r-1loqt21 r-61z16t r-ero68b r-vkv6oe r-10paoce r-1e081e0 r-5njf8e r-1otgn73 r-lrvibr')]")
                 button.click()
-                #print("Button found and clicked")
             except:
-                #print("Find button failed... stopping.")
                 break
 
         hotelslist.append(hotel_objects) 
@@ -135,7 +121,6 @@ def traveloka():
             writer=csv.DictWriter(file_writer,fieldnames=fields)
             for x in review_list:
                 writer.writerow(x)   
-    
         
     #convert to dataframe
     df = pd.DataFrame(data = hotelslist)
