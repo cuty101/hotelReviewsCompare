@@ -14,5 +14,9 @@ To use multiple data files:
 ```
 pd.read_csv(r'C:\Users\chery\Desktop\python_proj\reviews.csv')
 ```
-2) Concatenate csvs
-3) Get concatenated csv as output
+```
+pd.concat([codex_df_ratings, verno_df_ratings, xinying_df_ratings])
+```
+```
+concat_df.to_csv(r'C:\Users\chery\Desktop\python_proj\all_subratings.csv',index=False)
+```
