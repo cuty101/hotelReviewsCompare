@@ -11,6 +11,8 @@ python coolflaskapp.py
 wait for the program to run, then head over to 127.0.0.1:5000 and click the buttons and enjoy.
 
 To merge csvs:
-1) read csvs
+```
+pd.read_csv(r'C:\Users\chery\Desktop\python_proj\reviews.csv')
+```
 2) Concatenate csvs
 3) Get concatenated csv as output
