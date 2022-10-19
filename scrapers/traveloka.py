@@ -97,7 +97,6 @@ def traveloka():
         hotel_objects['Service'] = str(service)
 
         review_list = []
-
         numberofreviews = 100
         while len(review_list) < numberofreviews:
             reviewshtml = driver.page_source
