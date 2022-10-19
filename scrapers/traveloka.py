@@ -88,6 +88,7 @@ def traveloka():
         reviewshtml = driver.page_source
         reviewsoup = BeautifulSoup(reviewshtml,'html.parser')
         reviews = reviewsoup.find_all('div',class_='css-1dbjc4n r-1guathk r-1yzf0co')
+        
         starsdiv = reviewsoup.find_all('div',class_ = "css-1dbjc4n r-vxcjpn r-bgc8nv")[1]
         starrow = starsdiv.find_all('div',class_ = 'css-1dbjc4n r-1awozwy r-18u37iz r-1h0z5md')
         cleanliness = countstars(starrow[0])
