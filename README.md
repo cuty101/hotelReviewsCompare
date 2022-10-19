@@ -10,7 +10,7 @@ python coolflaskapp.py
 ```
 wait for the program to run, then head over to 127.0.0.1:5000 and click the buttons and enjoy.
 
-To merge csvs:
+To use multiple data files:
 ```
 pd.read_csv(r'C:\Users\chery\Desktop\python_proj\reviews.csv')
 ```
